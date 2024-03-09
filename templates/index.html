@@ -87,6 +87,93 @@
 {% endif %}
 
 
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TripGenie</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <!-- Bootstrap Link -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <!-- Bootstrap Link -->
+  
+  <!-- Bootstrap JavaScript Link -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+   integrity="sha384-rbs5GBFzTBxCefAqWtDANhTxM4l4xj9iaVbIG63S9yFjroj3sF1dQbZCCmFC6jPx" crossorigin="anonymous"></script>
+  <!-- Bootstrap JavaScript Link -->
+
+  <!-- Fontawesome cdn -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Fontawesome cdn -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+
+  
+  {% if username %}
+  <script>
+    function handleGeolocationPermission() {
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+              position => {
+                  const username = sessionStorage.getItem('username');
+                  const { latitude, longitude } = position.coords;
+  
+                  // Send data to Flask app to store in MongoDB
+                  fetch('/store_location', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({ username, latitude, longitude }),
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                      
+                      console.log(data);
+  
+                      // Reverse geocoding using Nominatim
+                      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`, {
+                          method: 'GET',
+                      })
+                      .then(response => response.json())
+                      .then(addressData => {
+                          console.log(addressData);
+  
+                          // Make another post request to store the address in MongoDB
+                          fetch('/store_address', {
+                              method: 'POST',
+                              headers: {
+                                  'Content-Type': 'application/json',
+                              },
+                              body: JSON.stringify({ username, address: addressData.display_name }),
+                          })
+                          .then(response => response.json())
+                          .then(data => console.log(data))
+                          .catch(error => console.error('Error storing address:', error));
+                      })
+                      .catch(error => console.error('Error reverse geocoding:', error));
+                  })
+                  .catch(error => console.error('Error storing location:', error));
+              },
+              error => {
+                  console.error('Geolocation error:', error.message);
+              }
+          );
+      } else {
+          console.log('Geolocation is not supported by this browser.');
+      }
+  }
+    // Call the function with a delay on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(handleGeolocationPermission, 1000); // Delay in milliseconds (adjust as needed)
+    });
+</script>
+{% endif %}
 
   
 </head>
@@ -94,14 +181,14 @@
 <body>
 
   <!-- Navbar Start -->
-  <nav class="navbar navbar-expand-lg" id="navbar">
-    <div class="container" id="conatiner1">
-      <a class="navbar-brand" href="index.html" id="logo"><span>T</span>ripGenie</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container" id="container">
+      <a class="navbar-brand" href="#" id="logo"><span>T</span>ripGenie</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" onclick="handleNavbarToggle()">
         <span class="fa-solid fa-bars"></span>
       </button>
-      <div class="collapse navbar-collapse" id="mynavbar">
-        <ul class="navbar-nav me-auto">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link active" href="{{url_for('index')}}">Home</a>
           </li>
@@ -127,10 +214,10 @@
             <a class="nav-link" href="#about">About us</a>
           </li>
         </ul>
-        <form class="d-flex">
+        <form class="d-flex" id="f">
           <input class="form-control me-2" type="text" id = "y" placeholder="Search">
           <button class="btn btn-primary me-2" type="button" id="bv"><i class="fa fa-search"></i></button>
-          {% if username %}
+           {% if username %}
           <div class="dropdown">
             <button class="btn btn-primary me-2" type="button" id="bu"><i class='far fa-user-circle' style='font-size:24px;'></i></button>
             <div class="dropdown-content">
@@ -148,8 +235,15 @@
       </div>
     </div>
   </nav>
-  <!-- Navbar End-->
 
+
+  <script>
+    function handleNavbarToggle() {
+      const navbarCollapse = document.querySelector('#navbarNav');
+      navbarCollapse.classList.toggle('show');
+    }
+  </script>
+  <!-- Navbar End-->
 
   <!-- Home section start-->
   <div class="home">
@@ -542,13 +636,12 @@
 
 
 
-
-
-
-
-
   <script src="{{ url_for('static', filename='script_login.js') }}"></script>
   <script src="{{ url_for('static', filename='script_signup.js') }}"></script>
 </body>
+
+</html>
+  
+</head>
 
 </html>
