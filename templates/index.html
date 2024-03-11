@@ -26,96 +26,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
 
-  
-  {% if username %}
-  <script>
-    function handleGeolocationPermission() {
-      if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-              position => {
-                  const username = sessionStorage.getItem('username');
-                  const { latitude, longitude } = position.coords;
-  
-                  // Send data to Flask app to store in MongoDB
-                  fetch('/store_location', {
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({ username, latitude, longitude }),
-                  })
-                  .then(response => response.json())
-                  .then(data => {
-                      
-                      console.log(data);
-  
-                      // Reverse geocoding using Nominatim
-                      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`, {
-                          method: 'GET',
-                      })
-                      .then(response => response.json())
-                      .then(addressData => {
-                          console.log(addressData);
-  
-                          // Make another post request to store the address in MongoDB
-                          fetch('/store_address', {
-                              method: 'POST',
-                              headers: {
-                                  'Content-Type': 'application/json',
-                              },
-                              body: JSON.stringify({ username, address: addressData.display_name }),
-                          })
-                          .then(response => response.json())
-                          .then(data => console.log(data))
-                          .catch(error => console.error('Error storing address:', error));
-                      })
-                      .catch(error => console.error('Error reverse geocoding:', error));
-                  })
-                  .catch(error => console.error('Error storing location:', error));
-              },
-              error => {
-                  console.error('Geolocation error:', error.message);
-              }
-          );
-      } else {
-          console.log('Geolocation is not supported by this browser.');
-      }
-  }
-    // Call the function with a delay on page load
-    document.addEventListener('DOMContentLoaded', function () {
-        setTimeout(handleGeolocationPermission, 1000); // Delay in milliseconds (adjust as needed)
-    });
-</script>
-{% endif %}
-
-
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TripGenie</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <!-- Bootstrap Link -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <!-- Bootstrap Link -->
-  
-  <!-- Bootstrap JavaScript Link -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-   integrity="sha384-rbs5GBFzTBxCefAqWtDANhTxM4l4xj9iaVbIG63S9yFjroj3sF1dQbZCCmFC6jPx" crossorigin="anonymous"></script>
-  <!-- Bootstrap JavaScript Link -->
-
-  <!-- Fontawesome cdn -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <!-- Fontawesome cdn -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
-
-  
   {% if username %}
   <script>
     function handleGeolocationPermission() {
@@ -207,10 +117,10 @@
             <a class="nav-link" href="#packages">Packages</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#services">Services</a>
+            <a class="nav-link" href="#gallery">Gallery</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#gallery">Gallery</a>
+            <a class="nav-link" href="#services">Services</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#reviews">Reviews</a>
@@ -522,7 +432,7 @@
         <div class="card" id="card2">
           <i class="fas fa-hotel"></i>
           <h3>Affordable hotel</h3>
-          <p>We provide you the best hotels with affordable price and with best comfort.</p>
+          <p>We provide you the top rated Hotel recommendations with affordable price and with best comfort.</p>
 
         </div>
 
@@ -530,7 +440,7 @@
         <div class="card " id="card2">
           <i class="fas fa-utensils"></i>
           <h3>Dining</h3>
-          <p>We provide you the best Food and Drinks with affordable price and with best comfort.</p>
+          <p>We provide you the best Food recommendations with affordable price and with best comfort.</p>
 
         </div>
 
@@ -540,25 +450,25 @@
         <div class="card" id="card2">
           <i class="fas fa-bullhorn"></i>
           <h3>Safety Guide</h3>
-          <p>We also provide you the safety guide that provides you the best Security.
+          <p>We also provide you safety precautionary measures that provides you the best security.
           </p>
         </div>
         <div class="card " id="card2">
           <i class="fas fa-globe-asia"></i>
           <h3>Around the World</h3>
-          <p>We provide packages all around the world within affordable prizes.</p>
+          <p>We provide accurate trip itinerary all around the world for specified number of days within budget.</p>
 
         </div>
         <div class="card" id="card2">
           <i class="fas fa-plane"></i>
           <h3>Fastest Travel</h3>
-          <p>We provide you the best and affordable flights with in your give period of time.</p>
+          <p>We provide you the best and affordable transportation options within your give period of time.</p>
 
         </div>
         <div class="card card7" id="card2">
           <i class="fas fa-hiking"></i>
           <h3>Adventures</h3>
-          <p>We support your thirst for adventures and we provide you the guide along with it.</p>
+          <p>We support your thirst for adventures, offering the best itineraries, ensuring unforgettable experiences.</p>
 
         </div>
       </div>
@@ -617,8 +527,8 @@
                             </div>
                     </div>
                     <div class="card-content">
-                        <h2 class="name">Anakshi Sinha</h2>
-                        <p class="description">Along with my friends i went to bali . It was such a pleasent journey , this app helped me a lot regarding the day to day planning along with the budget.</p>
+                        <h2 class="name"><b>Anakshi Sinha</b></h2>
+                        <p class="description">Along with my friends i went to Bali . It was such a pleasant journey , this webiste helped me a lot regarding the day to day planning along with the budget.</p>
                     </div>
             </div>
             <div class="card swiper-slide">
@@ -631,8 +541,8 @@
                         </div>
                 </div>
                 <div class="card-content">
-                    <h2 class="name">Somesh Roy</h2>
-                    <p class="description">Great experience in dubia along with my family.Very good website.</p>
+                    <h2 class="name"><b>Somesh Roy</b></h2>
+                    <p class="description">Great experience in Dubia along with my family.Very good website.</p>
                 </div>
         </div>
         <div class="card swiper-slide">
@@ -645,8 +555,8 @@
                     </div>
             </div>
             <div class="card-content">
-                <h2 class="name">Reshma </h2>
-                <p class="description">Along with my husband went to paris . It was such a pleasent journey , this app helped me a lot regarding the day to day planning along with the budget.</p>
+                <h2 class="name"><b>Reshma</b> </h2>
+                <p class="description">Absolutely love this AI trip planner! Customized itineraries for any destination, days, and budget. Takes the stress out of travel planning. Five stars!"</p>
             </div>
     </div>
     <div class="card swiper-slide">
@@ -659,8 +569,8 @@
                 </div>
         </div>
         <div class="card-content">
-            <h2 class="name">Sinhak </h2>
-            <p class="description">A budget friendly website.</p>
+            <h2 class="name"><b>Sinhak</b> </h2>
+            <p class="description">Exceptional service! The AI-based trip planner is a wizard in crafting perfect itineraries. Delivered an amazing travel experience, from planning to execution. Impressed!</p>
         </div>
 </div>
 <div class="card swiper-slide">
@@ -673,8 +583,8 @@
             </div>
     </div>
     <div class="card-content">
-        <h2 class="name">Tanya Merchant</h2>
-        <p class="description">This website helped me a lot regading the planning of the business within budget . This saved me a lot work and time regarding business and personal travles. </p>
+        <h2 class="name"><b>Tanya Merchant</b></h2>
+        <p class="description">This website helped me a lot regarding the planning of my trip within budget . This saved me a lot of time and expenses. </p>
     </div>
 </div>
 <div class="card  swiper-slide">
@@ -687,8 +597,8 @@
             </div>
     </div>
     <div class="card-content">
-        <h2 class="name">Prudvi S</h2>
-        <p class="description">Good website , i strongly suggest it.</p>
+        <h2 class="name"><b>Prudvi S</b></h2>
+        <p class="description">Impressive website; highly recommended.</p>
     </div>
 </div>
         </div>
@@ -708,13 +618,9 @@
       <div class="content-section">
 
         <div class="content">
-          <h2><strong>Hello, thanks for visiting our website and regarding us is given as below.
+          <h2><strong>Hello, thanks for visiting our website.
             </strong></h2>
-          <p>Individual airlines, hotels, bed and breakfasts, cruise lines, automobile rental companies, and other
-            travel-related service providers often maintain their own web sites providing retail sales. Many with
-            complex offerings include some sort of search engine technology to look for bookings within a certain
-            timeframe, service class, geographic location, or price range.But we collarbate with all of them in order to
-            provide the best service.
+          <p>TripGenie, the AI-based trip planner, revolutionizes travel with personalized itineraries tailored to your destination, days, and budget. Seamlessly blending technology and wanderlust, it crafts unforgettable adventures, recommends affordable accommodations and dining, ensuring a stress-free journey. Elevate your travel experience with TripGenie – your virtual guide to exploration.
 
           </p>
           <div class="button" >
@@ -736,14 +642,6 @@
     </div>
   </section>
   <!-- About section -->
-
-
-
-
-
-
-
-
 
   <script src="{{ url_for('static', filename='script_login.js') }}"></script>
   <script src="{{ url_for('static', filename='script_signup.js') }}"></script>
