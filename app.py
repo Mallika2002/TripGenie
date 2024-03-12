@@ -58,6 +58,14 @@ def load_username_from_file():
 def account_details():
     return render_template('cc_index.html')
 
+@app.route('/add_review')
+def add_review():
+    return render_template('add_review.html')
+
+@app.route('/trip_details',methods=['POST','GET'])
+def trip_details():
+    return render_template('trips_index.html')
+
 # Define a route to handle form submission
 @app.route('/update-profile', methods=['POST'])
 def update_profile():
