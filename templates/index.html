@@ -147,7 +147,7 @@
             <button class="btn btn-primary me-2" type="button" id="bu"><i class='far fa-user-circle' style='font-size:24px;'></i></button>
             <div class="dropdown-content">
             <a href="{{ url_for('account_details') }}" target="__blank">Account</a>
-            <a href="#">My Trips</a>
+            <a href="{{url_for('trip_details')}}"target="__blank">My Trips</a>
             <a href="{{ url_for('logout') }}">Logout</a>
             </div>
           </div>
