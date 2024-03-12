@@ -7,17 +7,32 @@
     scroll-behavior: smooth;
     font-family: 'Lato', sans-serif;
 }
-
 #navbar{
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 1600;
     background: #efeded;
     height: 70px;
     width: 100%;
     transition: background 0.3s;
 }
 
+
+#navbar.mobile-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fafafa;
+    color: #333333;
+    z-index: 1600; /* Set a higher z-index value */
+    display:flexbox;
+}
+
+#navbar.mobile-navbar.show {
+    display: block; /* Show the mobile navbar when the "show" class is added */
+}
 #navbar .container {
     display: flex;
     justify-content: space-between;
@@ -147,20 +162,27 @@
 }
 
 #y{
+    margin-left:40px;
     height: 37px;
+    width:170px;
  }
 
 #b{
     text-align:center;
     height:37px;
     width:100px;
+    background: rgb(71, 68, 255);
 }
 
 #b1{
+    white-space: nowrap;
     margin-right:10px;
     text-align:center;
+    background: rgb(71, 68, 255);
     height:37px;
     width:123px;
+    padding: 5px 15px; /* Adjust the padding as needed */
+    font-size: 14px; /* Adjust the font size as needed */
 }
 
 #bv{
@@ -168,6 +190,7 @@
     padding:5px;
     width:50px;
     margin-right:30px;
+    background: rgb(71, 68, 255);
 } 
 
   
@@ -207,6 +230,7 @@
     height:37px;
     padding:3px;
     width:50px;
+    background: rgb(71, 68, 255);
 } 
 
 @media (max-width:850px){
@@ -225,8 +249,15 @@
     .home .content p{
         font-size: 13px;
     }
+    #b1 {
+        width: 100%; /* Adjust the width as needed */
+        margin-top: 10px; /* Add some spacing for better visibility */
+      }
 }
 
+.about{
+    margin-top: 40px;
+}
 .about .content-section{
     float:left;
     width:55%;
@@ -288,10 +319,7 @@
     font-size:30px;
     padding:0px 10px;
 }
-.about .content-section .social i:hover{
 
-    width: 25px;
-}
 @media screen and (max-width:768px) {
     .about .container{
         width: 80%;
