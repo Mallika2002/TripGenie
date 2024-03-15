@@ -111,14 +111,19 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link active" href="{{url_for('index')}}">Home</a>
-          </li>
+          
           {% if 'username' in session %}
+          <li class="nav-item">
+            <a class="nav-link active" href="{{ url_for('user_page', username=username) }}">Home</a>
+          </li>
+          
           <li class="nav-item">
           <a class="nav-link" href="{{ url_for('book') }}">Book</a>
           </li>
          {% else %}
+         <li class="nav-item">
+          <a class="nav-link active" href="{{url_for('index')}}">Home</a>
+        </li>
          <li class="nav-item">
           <a class="nav-link" href="{{ url_for('book') }}">Book</a>
          </li>  
