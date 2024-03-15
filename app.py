@@ -159,9 +159,30 @@ def store_address():
 
     return jsonify({'status': 'success'})
 
+
+
+
+
+
+@app.route('/plan')
+def plan():
+    user_data_path = os.path.join(os.path.dirname(__file__), 'place.txt')
+    query_param = request.args.get('query')
+    if query_param:
+        with open(user_data_path, 'w') as user_data_file:  # Path adjusted to save in the outer directory
+            user_data_file.write(query_param)
+        code_path = os.path.abspath("streamlit/code.py")
+        subprocess.Popen(["streamlit", "run", code_path])
+    
+    else:
+            # Handle the case where the username is not in the session
+        return redirect(url_for('index'))
+
 @app.route('/user/<username>')
 def user_page(username):
     return render_template('index.html', username=username)
+
+
 
 @app.route('/')
 def index():
