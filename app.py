@@ -257,14 +257,14 @@ def book():
         # Store the current URL in the session
             session['previous_url'] = url_for('user_page', username=session['username'])
 
-            code_path = os.path.abspath("streamlit/code.py")
+            code_path = os.path.abspath("streamlit/TripThrive.py")
             subprocess.Popen(["streamlit", "run", code_path])
 
             # Redirect back to the user's page
             return redirect(session.pop('previous_url', url_for('index')))
         else:
 
-            code_path = os.path.abspath("streamlit/code.py")
+            code_path = os.path.abspath("streamlit/TripThrive.py")
             subprocess.Popen(["streamlit", "run", code_path])
             # Handle the case where the username is not in the session
             return redirect(url_for('index'))
