@@ -12,7 +12,10 @@ from streamlit_extras.stylable_container import stylable_container
 
 service = UseLLM(service_url="https://usellm.org/api/llm")
 
+
 st.set_page_config(layout='wide')
+
+
 
 video_html = """
 		<style>
@@ -84,6 +87,10 @@ custom_css = """
         div[data-testid="element-container"] li{
             font-size:20px !important;
         }
+        div[data-testid="stImage] img{
+        width:50%;
+        margin-left:10px;
+        }
         
 
     </style>
@@ -120,8 +127,16 @@ def update_sidebar_user(user_input):
                 if "trips" in user_data:
                     trips = user_data["trips"]
                     st.sidebar.markdown(
-                        '<div style="margin-left:5px;margin-bottom:10px;color: pink;font-weight: bold;font-size:43px;">TripGenie</div>',
-                        unsafe_allow_html=True)
+                        '<div style="margin-bottom: 10px; font-weight: bold; font-size: 43px; text-align: left; display: flex; align-items: center;">' +
+                        '<img src="https://raw.githubusercontent.com/Mallika2002/OCTANET_JUNE/main/logo_1-removebg.png" ' +
+                        'style="width: 60px; height: 60px; margin-right: 10px;">' +
+                        '<span style="color: pink;">T</span>' +
+                        '<span style="color: white;">rip</span>' +
+                        '<span style="color: pink;">T</span>' +
+                        '<span style="color: white;">hrive</span>' +
+                        '</div>',
+                        unsafe_allow_html=True
+                    )
                     st.sidebar.markdown(
                         '<div style="margin-left:13px;margin-top:30px;margin-bottom:10px;color: white;font-size:23px;">Your Trips:</div>',
                         unsafe_allow_html=True)
@@ -131,11 +146,19 @@ def update_sidebar_user(user_input):
                                             unsafe_allow_html=True)
                 else:
                     st.sidebar.markdown(
-                        '<div style="margin-left:5px;margin-bottom:10px;color: pink;font-weight: bold;font-size:43px;">TripGenie</div>',
-                        unsafe_allow_html=True)
+                        '<div style="margin-bottom: 10px; font-weight: bold; font-size: 43px; text-align: left; display: flex; align-items: center;">' +
+                        '<img src="https://raw.githubusercontent.com/Mallika2002/OCTANET_JUNE/main/logo_1-removebg.png" ' +
+                        'style="width: 60px; height: 60px; margin-right: 10px;">' +
+                        '<span style="color: pink;">T</span>' +
+                        '<span style="color: white;">rip</span>' +
+                        '<span style="color: pink;">T</span>' +
+                        '<span style="color: white;">hrive</span>' +
+                        '</div>',
+                        unsafe_allow_html=True
+                    )
                     st.sidebar.header("Your trips:")
             else:
-                # st.sidebar.markdown('<div style="margin-left:5px;margin-bottom:10px;color: pink;font-weight: bold;font-size:43px;">TripGenie</div>', unsafe_allow_html=True)
+                # st.sidebar.markdown('<div style="margin-left:5px;margin-bottom:10px;color: pink;font-weight: bold;font-size:43px;">TripThrive</div>', unsafe_allow_html=True)
                 st.sidebar.header("Your trips:")
 
     custom_css = """
@@ -286,18 +309,18 @@ def trip_planner_section():
             if len(username) > 0:
                 user_data = db.users.find_one({"username": username})
                 if user_data:
-                    user_location = user_data["location"].get("address", "Unknown Address")
-                    system_message = TRIP_PLANNER_SYSTEM.format(days=days, budget=budget, user_location=user_location,
+                    # user_location = user_data["location"].get("address", "Unknown Address")
+                    system_message = TRIP_PLANNER_SYSTEM.format(days=days, budget=budget, user_location=location,
                                                                 user_input=user_input, conditions=selected_condition)
                     output = get_response(system_message, user_input)
                     balloons_done = st.balloons()
                     st.markdown(
-                        '<span style="margin-top:30px;font-size:35px;color: yellow; font-weight: bold;">Welcome to TripGenie, Granting wishes with AI travel magic 🎉 </span>',
+                        '<span style="margin-top:30px;font-size:35px;color: yellow; font-weight: bold;">Welcome to TripThrive, Granting wishes with AI travel magic 🎉 </span>',
                         unsafe_allow_html=True)
 
                     if balloons_done:
-                        # st.markdown('<span style="margin-top:10px;color: red; font-weight: bold;">Welcome to TripGenie, Granting wishes with AI travel magic</span>', unsafe_allow_html=True)
-                        st.markdown(f'You can reach from {user_location} to {user_input} easily.')
+                        # st.markdown('<span style="margin-top:10px;color: red; font-weight: bold;">Welcome to TripThrive, Granting wishes with AI travel magic</span>', unsafe_allow_html=True)
+                        st.markdown(f'You can reach from {location} to {user_input} easily.')
                         st.markdown('Check this map ')
                         code2.main()
                         st.markdown(output.content)
@@ -318,10 +341,10 @@ def trip_planner_section():
 
                 # Assuming balloons are done is stored in a variable called `balloons_done`
                 balloons_done = st.balloons()
-                st.markdown('<span style="margin-top:30px;font-size:35px;color: yellow; font-weight: bold;">Welcome to TripGenie, Granting wishes with AI travel magic 🎉 </span>', unsafe_allow_html=True)
+                st.markdown('<span style="margin-top:30px;font-size:35px;color: yellow; font-weight: bold;">Welcome to <span style="font-color:blue;">TripThrive</span>, Granting wishes with AI travel magic 🎉 </span>', unsafe_allow_html=True)
 
                 if balloons_done:
-                    # st.markdown('<span style="margin-top:10px;color: red; font-weight: bold;">Welcome to TripGenie, Granting wishes with AI travel magic</span>', unsafe_allow_html=True)
+                    # st.markdown('<span style="margin-top:10px;color: red; font-weight: bold;">Welcome to TripThrive, Granting wishes with AI travel magic</span>', unsafe_allow_html=True)
                     st.markdown(f'You can reach from {location} to {user_input} easily.')
                     st.markdown('Check this map ')
                     code2.main()
