@@ -59,7 +59,7 @@
                         class="form-control"
                         id="name"
                         name="name"
-                        placeholder="Mallika Boddeda"
+                        placeholder="abcd"
                       />
                     </div>
                     <div class="form-group">
@@ -69,7 +69,7 @@
                         class="form-control mb-1"
                         name="email"
                         id="email"
-                        placeholder="mallika31@mail.com"
+                        placeholder="abcd@mail.com"
                       />
                     </div>
                   </div>
@@ -167,22 +167,20 @@
           </div>
         </div>
         <div class="text-right mt-3">
-            <!-- Display error message if present -->
-            {% if error_message %}
-            <div class="alert alert-danger" role="alert">
-                {{ error_message }}
-            </div>
-            {% endif %}
+          <!-- Display error message if present -->
+          {% if error_message %}
+          <div class="alert alert-danger" role="alert">{{ error_message }}</div>
+          {% endif %}
 
-            <!-- Display success message if present -->
-            {% if success %}
-            <div class="alert alert-success" role="alert">
-                {{ alert }}
-            </div>
-            {% endif %}
+          <!-- Display success message if present -->
+          {% if success %}
+          <div class="alert alert-success" role="alert">{{ alert }}</div>
+          {% endif %}
           <button type="submit" class="btn btn-primary">Save changes</button
           >&nbsp;
-          <button type="button" class="btn btn-default" onclick="clearForm()">Cancel</button>
+          <button type="button" class="btn btn-default" onclick="clearForm()">
+            Cancel
+          </button>
         </div>
       </div>
     </form>
@@ -193,9 +191,9 @@
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript">
-        function clearForm() { 
-            document.getElementById("myForm").reset();
-        }
+      function clearForm() {
+        document.getElementById("myForm").reset();
+      }
       function validateForm() {
         // Validate email format only if it's not empty
         var emailInput = document.getElementById("email");
@@ -245,7 +243,6 @@
         document.getElementById("myForm").submit();
 
         // Reset form fields
-       
       }
     </script>
   </body>
