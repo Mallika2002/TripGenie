@@ -1,15 +1,18 @@
 import os
+from geopy.geocoders import Nominatim
+import code2  # Importing the other Python file
 from pymongo import MongoClient
 import streamlit as st
 from usellm import UseLLM, Message, Options
 from utils1 import TRIP_PLANNER_SYSTEM
-from utils1 import format_trip_planner_message 
-
+from utils1 import format_trip_planner_message
+import streamlit_antd_components as sac
 from streamlit_geolocation import streamlit_geolocation
+from streamlit_extras.stylable_container import stylable_container
 
 service = UseLLM(service_url="https://usellm.org/api/llm")
 
-st.set_page_config(layout="wide")
+st.set_page_config(layout='wide')
 
 video_html = """
 		<style>
@@ -21,7 +24,7 @@ video_html = """
 		  min-width: 100%; 
 		  min-height: 100%;
 		}
-        
+
 
 		.content {
 		  position: fixed;
@@ -30,7 +33,7 @@ video_html = """
 		  color: #f1f1f1;
 		  width: 100%;
 		  padding: 20px;
-          
+
 		}
 
 		</style>
@@ -46,73 +49,67 @@ st.markdown(video_html, unsafe_allow_html=True)
 client = MongoClient('mongodb://localhost:27017/')
 db = client['tripdb']
 
-
 # Custom CSS for styling input box
 custom_css = """
     <style>
         .stTextInput input[type="text"] {
-            background-color: transparent !important;
-            border: 1px solid transparent !important; /* Set initial border color to transparent */
+            background-color: #0B232F !important;
+            border: 1px solid white !important; /* Set initial border color to transparent */
             font-size: 25px !important;
             font-weight: bold !important;
             color: white !important;
             position: absolute !important;
+            border-radius:12px;
             z-index: 1 !important; /* Ensure the text input field appears over the video */
             transition: border-color 0.3s ease; /* Add smooth transition for border color change */
         }
-
-        .stTextInput input[type="text"]:focus {
-            border-color: white !important; /* Change border color to white when the input is focused */
-        }
-        .st-c0{
-        width:500px !important;
-        }
         .st-b0{
-        width:500px !important;
-        }
-        .st-dh{
-        width:500px !important;
-        }
-        .st-cr st-cs st-ct st-d8 st-d9 .st{
-    transform: translate3d(79px, 762px, 0px);
-}
-        .stTextInput {
-            width: 400px !important;
-            height: 90px !important;
-        }
-        div[data-testid="element-container"] p{
-            font-size:20px;
-        }
-        div[data-testid="element-container"] li{
-            font-size:20px;
-        }
-        .stApp-container{
-            margin-left:35px;
+        width:340px !important;
         }
         
+        .stTextInput {
+            width: 342px !important;
+            height: 90px !important;
+        }
+        div[data-testid="stNumberInputContainer"] {
+            background: transparent !important;
+            border: 1px solid white !important; /* Set initial border color to transparent */
+            width:150px !important;
+            color: white !important;
+            height:50px !important;
+        }
+        div[data-testid="element-container"] p{
+            font-size:20px !important;
+        }
+        div[data-testid="element-container"] li{
+            font-size:20px !important;
+        }
+        
+
     </style>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
 
-# def tour_guide_section():
-#     st.title(r"$\textsf{\Large Tour Guide Assistant}$")
-#     user_input = st.text_input(r"$\textsf{\normalsize Enter the Place You Want to Visit}$", key="input1")
-#     if st.button(r"$\textsf{\normalsize Send}$", key="button1"):
-#         if user_input:
-#             system_message = TOUR_GUIDE_SYSTEM
-#             output = get_response(system_message, user_input)
-#             st.markdown(output.content)
-#         else:
-#             st.markdown("Please Enter Some Text")
 
+class stylable_container:
+    def __init__(self, css_styles):
+        self.css_styles = css_styles
+
+    def __enter__(self):
+        for css_style in self.css_styles:
+            st.markdown(f"<style>{css_style}</style>", unsafe_allow_html=True)
+
+    def __exit__(self, type, value, traceback):
+        pass
 
 
 def update_sidebar_user(user_input):
     if user_input:
-        st.sidebar.markdown(f'<div class="place-block" style="text-align: center;">{user_input}</div>', unsafe_allow_html=True)
+        st.sidebar.markdown(f'<div class="place-block" style="text-align: center;">{user_input}</div>',
+                            unsafe_allow_html=True)
     else:
         user_data_path = os.path.join(os.path.dirname(__file__), '..', 'user_data.txt')
-       
+
         with open(user_data_path, 'r') as user_data_file:
             username = user_data_file.read().strip()
 
@@ -121,25 +118,30 @@ def update_sidebar_user(user_input):
             if user_data:
                 trips = user_data.get("trips", [])
                 if "trips" in user_data:
-                        trips = user_data["trips"]
-                        st.sidebar.markdown('<div style="margin-left:5px;margin-bottom:10px;color: pink;font-weight: bold;font-size:43px;">TripGenie</div>', unsafe_allow_html=True)
-                        st.sidebar.markdown('<div style="margin-left:13px;margin-top:30px;margin-bottom:10px;color: white;font-size:23px;">Your Trips:</div>', unsafe_allow_html=True)
+                    trips = user_data["trips"]
+                    st.sidebar.markdown(
+                        '<div style="margin-left:5px;margin-bottom:10px;color: pink;font-weight: bold;font-size:43px;">TripGenie</div>',
+                        unsafe_allow_html=True)
+                    st.sidebar.markdown(
+                        '<div style="margin-left:13px;margin-top:30px;margin-bottom:10px;color: white;font-size:23px;">Your Trips:</div>',
+                        unsafe_allow_html=True)
 
-
-                        for trip in trips:
-                            st.sidebar.markdown(f'<div class="place-block" style="text-align: center;">{trip}</div>', unsafe_allow_html=True)
+                    for trip in trips:
+                        st.sidebar.markdown(f'<div class="place-block" style="text-align: center;">{trip}</div>',
+                                            unsafe_allow_html=True)
                 else:
-                    st.sidebar.markdown('<div style="margin-left:5px;margin-bottom:10px;color: pink;font-weight: bold;font-size:43px;">TripGenie</div>', unsafe_allow_html=True)
+                    st.sidebar.markdown(
+                        '<div style="margin-left:5px;margin-bottom:10px;color: pink;font-weight: bold;font-size:43px;">TripGenie</div>',
+                        unsafe_allow_html=True)
                     st.sidebar.header("Your trips:")
             else:
                 # st.sidebar.markdown('<div style="margin-left:5px;margin-bottom:10px;color: pink;font-weight: bold;font-size:43px;">TripGenie</div>', unsafe_allow_html=True)
                 st.sidebar.header("Your trips:")
 
-
     custom_css = """
         <style>
 
-        
+
         .place-list {
             display: flex;
             flex-wrap: wrap;
@@ -151,7 +153,7 @@ def update_sidebar_user(user_input):
         background-image:url('https://images.unsplash.com/photo-1583161443085-2e2947a6664c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fHRyYXZlbGxpbmd8ZW58MHx8MHx8fDA%3D');
         background-size:cover;
         width:350px !important;
-        
+
         }
         .st-emotion-cache-16txtl3 {
         padding: 4rem 1rem;
@@ -176,62 +178,160 @@ def update_sidebar_user(user_input):
 
 
 def trip_planner_section():
-    st.title(r"$\textsf{\Large Personal Trip Planner}$")
-    
+    st.markdown('<span style="margin-top:30px;font-size:55px;color: red; font-weight: bold;"> Personal Trip Planner </span>', unsafe_allow_html=True)
+
+
     user_data_path = os.path.join(os.path.dirname(__file__), '..', 'user_data.txt')
+    user_path = os.path.join(os.path.dirname(__file__),'user.txt')
     no_user_data_path = os.path.join(os.path.dirname(__file__), '..', 'no_user_data.txt')
-    
+
+    # user_input = st.text_input(r"$\textsf{\normalsize Enter the Place You Want to Visit}$", key="input2")
+
     with open(user_data_path, 'r') as user_data_file:
         username = user_data_file.read().strip()
 
-    if len(username)==0:
-        st.header("Share your Location")
-        user_location = streamlit_geolocation()
-        st.markdown(
+    # if len(username) == 0:
+    st.header("Share your Location")
+    nouser_location = streamlit_geolocation()
+    st.markdown(
         f"""
-        <style>
-            .element-container iframe {{
-                width: 30px;  /* Set your desired width */
-                height: 30px;  /* Set your desired height */
-            }}
-        </style>
-        """,
+    <style>
+        .element-container iframe {{
+            width: 30px;  /* Set your desired width */
+            height: 30px;  /* Set your desired height */
+        }}
+    </style>
+    """,
         unsafe_allow_html=True
     )
+    latitude = nouser_location['latitude']
+    longitude = nouser_location['longitude']
 
-    
-     
+    geolocator = Nominatim(user_agent="geo_converter")
+
+    # Reverse geocode to get the address
+    location = geolocator.reverse((latitude, longitude))
+
+    # Print the address
+    print(location)
+
     user_input = st.text_input(r"$\textsf{\normalsize Enter the Place You Want to Visit}$", key="input2")
-    days = st.text_input(r"$\textsf{\normalsize Enter the Number of Days}$", key="input3")
-    budget = st.text_input(r"$\textsf{\normalsize Enter the Budget per person}$", key="input4")
-    
-    conditions = st.selectbox(r"$\textsf{\normalsize Select Conditions}$", ["Couple", "Friends", "Family"], key="conditions")
 
+    if latitude is not None:
+        with open(user_path, 'w',encoding='utf-8') as user_file:
+            user_file.write(f'{user_input}\n{location}')
+
+    # else:
+        
+    #     user_data = db.users.find_one({"username": username})
+    #     user_location = user_data["location"].get("address", "Unknown Address")
+    #     print(user_location)
+    #     with open(user_path, 'w',encoding='utf-8') as user_file:
+    #         user_file.write(f'{user_input}\n{user_location}')
+
+    # user_input = st.text_input(r"$\textsf{\normalsize Enter the Place You Want to Visit}$", key="input2")
+
+    # days = st.slider(r"$\textsf{\normalsize Enter the Number of Days}$", 1, 9, 1)
+    # if latitude is not None:
+    #     with open(user_path, 'w') as user_file:
+    #         user_file.write(f'{user_input}\n{location}')
+
+    col1, _ = st.columns([1, 4])
+    with col1:
+        days = st.slider(
+            label=r"$\textsf{\normalsize Choose Duration of your Trip}$",
+            min_value=1, max_value=9
+        )
+    budget = st.text_input(r"$\textsf{\normalsize Enter the Budget per person}$", key="input4")
+
+    if days > 1:
+
+        with stylable_container(
+                css_styles=[
+                    """
+                    .stSelectbox {
+                    background-color: transparent;
+                        width: 359px !important;
+                        color: white;
+                    }
+                    """,
+
+
+                ]
+        ):
+                option = st.selectbox(
+                    r"$\textsf{\normalsize Choose your Preferences}$",
+                    ("Couple", "Friends", "Family"),
+                    index=None,
+                    placeholder="Select",
+                )
+                selected_condition = []  # List to store selected conditions
+
+                if option == "Couple":
+                    selected_condition.append("Couple")
+                elif option == "Friends":
+                    choose = st.radio("Choose Category", ("Boys", "Girls"))
+                    if choose == "Boys":
+                        selected_condition.append("Boys group")
+                    elif choose == "Girls":
+                        selected_condition.append("Girls group")
+                elif option == "Family":
+                        selected_condition.append("Family")
+                    
+    else:
+        selected_condition = 'Solo Traveller'
 
     if st.button(r"$\textsf{\normalsize Generate Itinerary}$", key="button2"):
-        
         if user_input:
-            if len(username)>0:
+            if len(username) > 0:
                 user_data = db.users.find_one({"username": username})
                 if user_data:
                     user_location = user_data["location"].get("address", "Unknown Address")
-                    system_message = TRIP_PLANNER_SYSTEM.format(days=days, budget=budget, user_location=user_location, user_input=user_input,conditions=conditions)
+                    system_message = TRIP_PLANNER_SYSTEM.format(days=days, budget=budget, user_location=user_location,
+                                                                user_input=user_input, conditions=selected_condition)
                     output = get_response(system_message, user_input)
-                    st.markdown(output.content)
+                    balloons_done = st.balloons()
+                    st.markdown(
+                        '<span style="margin-top:30px;font-size:35px;color: yellow; font-weight: bold;">Welcome to TripGenie, Granting wishes with AI travel magic 🎉 </span>',
+                        unsafe_allow_html=True)
+
+                    if balloons_done:
+                        # st.markdown('<span style="margin-top:10px;color: red; font-weight: bold;">Welcome to TripGenie, Granting wishes with AI travel magic</span>', unsafe_allow_html=True)
+                        st.markdown(f'You can reach from {user_location} to {user_input} easily.')
+                        st.markdown('Check this map ')
+                        code2.main()
+                        st.markdown(output.content)
+                    else:
+                        st.warning("Please wait for the balloons to finish before proceeding.")
+                    # st.markdown(output.content)
 
                     trips = user_data.get("trips", [])
                     if user_input not in trips:
                         trips.append(user_input)
                         db.users.update_one({"username": username}, {"$set": {"trips": trips}})
                         update_sidebar_user(user_input)  # Update the sidebar in case there are changes
-        
+
             else:
-
-                # user_location = "Visakhapatnam, India"
-                system_message = TRIP_PLANNER_SYSTEM.format(days=days, budget=budget, user_location=user_location, user_input=user_input,conditions=conditions)
+                system_message = TRIP_PLANNER_SYSTEM.format(days=days, budget=budget, user_location=location,
+                                                            user_input=user_input, conditions=selected_condition)
                 output = get_response(system_message, user_input)
-                st.markdown(output.content)
 
+                # Assuming balloons are done is stored in a variable called `balloons_done`
+                balloons_done = st.balloons()
+                st.markdown('<span style="margin-top:30px;font-size:35px;color: yellow; font-weight: bold;">Welcome to TripGenie, Granting wishes with AI travel magic 🎉 </span>', unsafe_allow_html=True)
+
+                if balloons_done:
+                    # st.markdown('<span style="margin-top:10px;color: red; font-weight: bold;">Welcome to TripGenie, Granting wishes with AI travel magic</span>', unsafe_allow_html=True)
+                    st.markdown(f'You can reach from {location} to {user_input} easily.')
+                    st.markdown('Check this map ')
+                    code2.main()
+                    st.markdown(output.content)
+                else:
+                    st.warning("Please wait for the balloons to finish before proceeding.")
+
+                
+        else:
+            st.write("Please provide your destination")
 
 def get_response(system_message, user_input, *args):
     messages = [
@@ -249,21 +349,22 @@ def show(output):
     elif output == "NULL":
         st.markdown("Please Enter Some Text")
 
+
 def main():
     user_data_path = os.path.join(os.path.dirname(__file__), '..', 'user_data.txt')
 
     if os.stat(user_data_path).st_size == 0:
-        output=trip_planner_section()
+        output = trip_planner_section()
         show(output)
 
     else:
-    
+
         with open(user_data_path, 'r') as user_data_file:
             username = user_data_file.read().strip()
-            
+
         if username:
             update_sidebar_user("")
-            output=trip_planner_section()
+            output = trip_planner_section()
             show(output)
 
 
