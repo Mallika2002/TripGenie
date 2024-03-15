@@ -106,7 +106,12 @@
   <!-- Navbar Start -->
   <nav class="navbar navbar-expand-lg ">
     <div class="container" id="container">
-      <img src="{{ url_for('static', filename='images/logo 1.png') }}" width="160px" height="50px" alt="TripThriveLogo">
+      {% if 'username' in session %}
+      <img src="https://raw.githubusercontent.com/Mallika2002/OCTANET_JUNE/main/logo_1-removebg%20(1)-Photoroom.jpg" class ="e1" width="120px" height="50px" alt="TripThriveLogo">
+      {% else %}
+      <img src="https://raw.githubusercontent.com/Mallika2002/OCTANET_JUNE/main/logo_1-removebg%20(1)-Photoroom.jpg" class ="e" width="150px" height="50px" alt="TripThriveLogo">
+      {% endif %} 
+
       <a class="navbar-brand" href="" id="logo"><span>T</span>rip<span>T</span>hrive</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" onclick="handleNavbarToggle()">
         <span class="fa-solid fa-bars"></span>
@@ -230,7 +235,7 @@
               <i class="fa-solid fa-star checked"></i>
             </div>
             <h6>Price: <strong>$7000</strong></h6>
-            <a href="#book">Book Now</a>
+            <a href="https://www.makemytrip.com/flight/search?itinerary=VTZ-CGK-18/03/2024&tripType=O&paxType=A-1_C-0_I-0&intl=true&cabinClass=E&ccde=IN&lang=eng" target="_blank">Book Now</a>
           </div>
 
         </div>
@@ -252,7 +257,7 @@
               <i class="fa-solid fa-star "></i>
             </div>
             <h6 class="h">Price: <strong>$5000</strong></h6>
-            <a href="#book">Book Now</a>
+            <a href="https://www.makemytrip.com/flight/search?itinerary=VTZ-ATH-18/03/2024&tripType=O&paxType=A-1_C-0_I-0&intl=true&cabinClass=E&ccde=IN&lang=eng" target="_blank">Book Now</a>
           </div>
 
         </div>
@@ -274,7 +279,7 @@
               <i class="fa-solid fa-star  checked"></i>
             </div>
             <h6>Price: <strong>$4000</strong></h6>
-            <a href="#book">Book Now</a>
+            <a href="https://www.makemytrip.com/flight/search?itinerary=VTZ-LGA-18/03/2024&tripType=O&paxType=A-1_C-0_I-0&intl=true&cabinClass=E&ccde=IN&lang=eng" target="_blank">Book Now</a>
           </div>
 
         </div>
@@ -296,7 +301,7 @@
               <i class="fa-solid fa-star "></i>
             </div>
             <h6>Price: <strong>$5500</strong></h6>
-            <a href="#book">Book Now</a>
+            <a href="https://www.makemytrip.com/flight/search?itinerary=VTZ-NGO-18/03/2024&tripType=O&paxType=A-1_C-0_I-0&intl=true&cabinClass=E&ccde=IN&lang=eng" target="_blank">Book Now</a>
           </div>
 
         </div>
@@ -318,7 +323,7 @@
               <i class="fa-solid fa-star "></i>
             </div>
             <h6>Price: <strong>$5700</strong></h6>
-            <a href="#book">Book Now</a>
+            <a href="https://www.makemytrip.com/flight/search?itinerary=VTZ-LON-18/03/2024&tripType=O&paxType=A-1_C-0_I-0&intl=true&cabinClass=E&ccde=IN&lang=eng" target="_blank">Book Now</a>
           </div>
         </div>
         <div class="card card6" id="card2">
@@ -339,7 +344,7 @@
               <i class="fa-solid fa-star "></i>
             </div>
             <h6>Price: <strong>$6000</strong></h6>
-            <a href="#book">Book Now</a>
+            <a href="https://www.makemytrip.com/flight/search?itinerary=VTZ-PAR-18/03/2024&tripType=O&paxType=A-1_C-0_I-0&intl=true&cabinClass=E&ccde=IN&lang=eng" target="_blank">Book Now</a>
           </div>
 
         </div>
@@ -640,17 +645,6 @@
           <p>TripThrive, the AI-based trip planner, revolutionizes travel with personalized itineraries tailored to your destination, days, and budget. Seamlessly blending technology and wanderlust, it crafts unforgettable adventures, recommends affordable accommodations and dining, ensuring a stress-free journey. Elevate your travel experience with TripThrive – your virtual guide to exploration.
 
           </p>
-          <div class="button" >
-            <a href="">Read More</a>
-          </div>
-        </div>
-        <div class="social">
-
-          <a href=""><i class="fab fa-facebook"></i></a>
-          <a href=""><i class="fab fa-twitter"></i></a>
-          <a href=""><i class="fab fa-instagram"></i></a>
-          <a href=""><i class="fab fa-linkedin"></i></a>
-
         </div>
       </div>
       <div class="image-section">
@@ -664,6 +658,27 @@
   <script src="{{ url_for('static', filename='script_signup.js') }}"></script>
   <script src="../static/swiper-bundle.min.js"></script>
   <script src="../static/review_script.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("#bv").click(function(){
+        var searchQuery = $("#y").val();
+        $.ajax({
+            type: "GET",
+            url: "/plan",
+            data: { query: searchQuery },
+            success: function(response){
+                // Assuming response contains the URL to your Streamlit application
+               console.log('hii')
+            },
+            error: function(xhr, status, error){
+                console.error("Error:", error);
+            }
+        });
+    });
+});
+</script>
+
 </body>
 
 </html>
