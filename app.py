@@ -54,9 +54,20 @@ def load_username_from_file():
         username = file.read().strip()
     return username
     
+@app.route('/user/<username>/account_details')
+def account_details_with_username(username):
+    return render_template('cc_index.html')
+
 @app.route('/account_details')
 def account_details():
-    return render_template('cc_index.html')
+        if 'username' in session:
+            username = session['username']
+            # Redirect to the route with username included
+            return redirect(url_for('account_details_with_username', username=username))
+        else:
+            return render_template('cc_index.html')
+        
+
 
 @app.route('/add_review')
 def add_review():
@@ -82,6 +93,7 @@ def update_profile():
     }
     username_from_file = load_username_from_file()
     print(username_from_file)
+
 
     # Fetch user from MongoDB using the username from the session
     user = mongo.db.users.find_one({"username": username_from_file})
@@ -154,10 +166,13 @@ def user_page(username):
 @app.route('/')
 def index():
     if 'username' in session:
-        return render_template('index.html', username=session['username'])
+        print('HI')
+        return redirect(url_for('user_page', username=session['username']))
+        # return render_template('index.html', username=session['username'])
     else:
+        print('hO')
         shared_data_path = os.path.join(os.path.dirname(__file__), 'user_data.txt')
-        with open(shared_data_path, 'w') as file:
+        with open(shared_data_path, 'w',encoding='utf-8') as file:
             pass
 
         return render_template('index.html')
@@ -192,7 +207,7 @@ def login():
             session['username'] = username  # Store username in session
 
             shared_data_path = os.path.join(os.path.dirname(__file__), 'user_data.txt')
-            with open(shared_data_path, 'w') as file:
+            with open(shared_data_path, 'w',encoding='utf-8') as file:
                 file.write(f"{session.get('username')}")
                 
             return jsonify({'status': 'success'})
@@ -201,6 +216,8 @@ def login():
     else:
         return render_template('login.html')
     
+
+
 
 @app.route('/save_changes', methods=['POST'])
 def save_changes():
@@ -211,8 +228,6 @@ def save_changes():
         username_input = request.form.get('username')
         name = request.form.get('name')
         email = request.form.get('email')
-
-
 
         print(username)
         print(name)
@@ -227,6 +242,8 @@ def save_changes():
         )
 
         # Redirect back to the account details page
+
+        
         return redirect(url_for('account_details'))
     else:
         # Handle the case where the username is not in the session
