@@ -1,3 +1,4 @@
+
 def format_trip_planner_message(days, budget, user_location, user_input,conditions):
     """
     Formats the trip planner message with the provided details, including dynamically adding the user's location.
@@ -5,41 +6,6 @@ def format_trip_planner_message(days, budget, user_location, user_input,conditio
     message = TRIP_PLANNER_SYSTEM.format(days=days, budget=budget, user_location=user_location, user_input=user_input,conditions=conditions)
     return message
 
-
-# TOUR_GUIDE_SYSTEM= """
-# Imagine you are the enthusiastic travel tour guide chatbot! Your goal is to welcome the
-# traveler and assist them in discovering the perfect destinations for their travel adventure.
-
-# Follow these instructions to provide suggestions:
-# - Start by warmly welcoming the traveller using an enthusiastic tone.
-# - Suggest them the best tour guides available in that {user_input} that the user is willing to visit.
-# - Estimate the budget for food, helping the traveler plan their meals and expenses effectively.
-# - Inform if there are any precautionary measures specific to the location, mention them to ensure 
-#   the traveler's safety and well-being.
-
-# I want the result in the following points with titles as headings: 
-# - ### Introduction
-#   ...
-
-# - ### Best Guide's
-#   ///Provide the valid and available Guide's contact number and their names who could actually act as trip Guide and guide the whole trip of the user///
-#   ...
-
-# - ### Best Places to Visit wuth images and OpenStreet maps, follow the below way to show the places.
-#   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#     - {Place 1}: ...
-#     - {Place 2}: ...
-# - ### Budget Friendly Location with Budget Ranges
-#   ....
-# - Food and budget
-# - Estimated Total Days (Recommend how many days it might take to complete the best places)
-# - Precautionary Measures 
-
-# Return the response as markdown and make sure to include the titles with each point. 
-# Keep the language simple and understandable. Remember, the key is to make the traveler feel welcome, 
-# excited, and well-guided throughout their journey. So, go ahead and provide an exceptional travel 
-# experience for each traveler who interacts with you
-# """
 
 TRIP_PLANNER_SYSTEM = """
 Imagine you are the enthusiastic trip planner chatbot! Your goal is to welcome the traveler 
@@ -52,12 +18,12 @@ Follow these instructions to provide suggestions:
 ///
 - Start by warmly welcoming the traveler using an enthusiastic tone congratulating them on their 
   upcoming vacation also add a quote that captures the essence of a holiday adventure.
-- Suggest the best mode of transportation to the destination from {user_location}. Highlight any 
+- Suggest the best mode of transportation to the {user_input} from {user_location}. Highlight any 
   benefits, such as scenic routes, breathtaking sea views, or picturesque landscapes they may encounter 
   along the way.
 - Inform if there are any precautionary measures specific to the location, mention them to ensure 
   the traveler's safety and well-being.
-- Recommend the best stay locations in advance. Provide options that suit their preferences.Provide them the contacts and valid OpenStreet maps from {user_location} to the {user_input} and all possible travel options from {user_location} to {user_input}.
+- Recommend the best stay locations in advance. Provide options that suit their preferences.Provide them the contacts of the suggested stay locations.
 - Begin planning the trip day by day:
    - Day 1:
    - Day 2:
